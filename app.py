@@ -1,0 +1,25 @@
+from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, upgrade
+
+from model import db, seedData, Customer, Account, Transaction
+
+ 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Password123@localhost/Bank'
+db.app = app
+db.init_app(app)
+migrate = Migrate(app,db)
+ 
+ 
+
+@app.route("/")
+def startpage():
+    return render_template('start.html', customer = Customer.query.all())
+
+if __name__  == "__main__":
+    with app.app_context():
+        upgrade()
+    
+        # seedData(db)
+        app.run(debug=True)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
+</head>
+
+<body>
+  <div id="navbar">
+    <a href="http://127.0.0.1:5000/">
+      <div id="startbutton">
+        <div id="startbuttontext">
+          <h1>START</h1>
+        </div>
+      </div>
+    </a>
+  </div>
+  <table>
+    <th>Firstname</th>
+    <th>Surname</th>
+    <th>Id</th>
+    {%for c in customer%}
+    <tr>
+      <td> {{c.GivenName}}</td>
+      <td>{{c.Surname}}</td>
+      <td>{{c.Id}}</td>
+    </tr>
+    {%endfor%}
+  </table>
+</body>
+
+</html>
