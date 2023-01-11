@@ -19,24 +19,25 @@
       </div>
     </a>
   </div>
-
-  <div id="starttable">
-    <table id="tableoffallcustomers">
+  <h1>{{id}}</h1>
+  <div id="Accounts">
+    <table id="accounttable">
       <tr>
-        <th>Firstname</th>
-        <th>Surname</th>
-        <th>Id</th>
+        <th>Account</th>
+        <th>Balance</th>
       </tr>
-      {%for c in customer%}
+      {% for a in Account %}
+      {% if a.CustomerId==id %}
       <tr>
-        <td> {{c.GivenName}}</td>
-        <td>{{c.Surname}}</td>
-        <td><a href="{{url_for('customer', id=c.Id)}}">{{c.Id}}</a></td>
+        <td>{{a.AccountType}}</td>
+        <td>{{a.Balance}}</td>
       </tr>
-      {%endfor%}
+      {% endif %}
+      {% endfor %}
     </table>
+
   </div>
+
 </body>
-<script src="static\js\pagetable.js"></script>
 
 </html>

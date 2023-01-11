@@ -23,3 +23,32 @@
     position: relative;
     top: 8px;
 }
+
+#Accounts {
+    position: relative;
+    width: fit-content;
+    left: 45%;
+    top: 100px;
+}
+
+table {
+    table-layout: auto;
+    width: 150px;
+    border: 1px solid red;
+}
+
+td {
+    border: 1px solid blue;
+}
+
+#tableoffallcustomers {
+    position: relative;
+    left: 45%;
+    top: 24px;
+    width: 285px;
+}
+
+#starttable {
+    height: 530px;
+    overflow: hidden;
+}

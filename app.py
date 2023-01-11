@@ -15,7 +15,11 @@ migrate = Migrate(app,db)
 
 @app.route("/")
 def startpage():
-    return render_template('start.html', customer = Customer.query.all())
+    return render_template('start.html', customer=Customer.query.all())
+
+@app.route("/<id>")
+def customer(id):
+    return render_template('customer.html', id=int(id), Account=Account.query.all())
 
 if __name__  == "__main__":
     with app.app_context():
