@@ -15,7 +15,8 @@ migrate = Migrate(app,db)
 
 @app.route("/")
 def startpage():
-    return render_template('start.html', customer=Customer.query.all())
+    customer = Customer.query.all()
+    return render_template('start.html', customer=customer)
 
 @app.route("/<id>")
 def customer(id):

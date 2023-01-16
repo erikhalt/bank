@@ -11,15 +11,19 @@
 
 <body>
   <div id="navbar">
-    <a href="http://127.0.0.1:5000/">
-      <div id="startbutton">
+
+    <div id="startbutton">
+      <a href="http://127.0.0.1:5000/">
         <div id="startbuttontext">
           <h1>START</h1>
         </div>
-      </div>
-    </a>
-  </div>
+      </a>
+    </div>
 
+  </div>
+  <input type="text" id="searchbar" onkeyup="searchtable()" placeholder="search for id...">
+  <button id="nextpage" class="pager" onkeyup="pageing()">&rarr;</button>
+  <button id="prevpage" class="pager" onkeyup="pageing()">&larr;</button>
   <div id="starttable">
     <table id="tableoffallcustomers">
       <tr>
