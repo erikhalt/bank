@@ -1,0 +1,25 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}
+Ny kund
+{% endblock %}
+
+{% block content %}
+
+{% for field, errors in form.errors.items() %}
+{{ form[field].label }}: {{ ', '.join(errors) }}
+</br>
+{% endfor %}
+
+<form method="post">
+    {{ form.csrf_token }}
+    {{ form.name(placeholder="Enter Name") }}
+    {{ form.city(placeholder="Enter City") }}
+    {{ form.age() }}
+
+    <h3>hej</h3>
+
+    {{ form.countryCode() }}
+    <input type="submit" value="Spara">
+</form>
+{% endblock %}

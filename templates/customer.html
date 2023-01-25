@@ -1,45 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "basetemplate.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bank</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
-</head>
+{%block title%}
+Customer
+{%endblock%}
 
-<body>
-  <div id="navbar">
+{% block content %}
+<h1>{{customer.Id}}</h1>
 
-    <div id="startbutton">
-      <a href="http://127.0.0.1:5000/">
-        <div id="startbuttontext">
-          <h1>START</h1>
-        </div>
-      </a>
-    </div>
+{%for element in accounts%}
+<h1>
+    {{element.AccountType}} {{element.Balance}}
+</h1>
 
-  </div>
-  <h1>{{id}}</h1>
-  <div id="Accounts">
-    <table id="accounttable">
-      <tr>
-        <th>Account</th>
-        <th>Balance</th>
-      </tr>
-      {% for a in Account %}
-      {% if a.CustomerId==id %}
-      <tr>
-        <td>{{a.AccountType}}</td>
-        <td>{{a.Balance}}</td>
-      </tr>
-      {% endif %}
-      {% endfor %}
-    </table>
+<a href={{url_for('deposit', id=customer.Id, accountid=element.Id) }}><button
+        class="customerchoices">Deposit</button></a>
+<a href={{url_for('withdrawl', id=customer.Id, accountid=element.Id)}}><button
+        class="customerchoices">Withdrawl</button></a>
+<a href={{url_for('transfer', id=customer.Id)}}><button class="customerchoices">Transfer</button></a>
 
-  </div>
+{%endfor%}
 
-</body>
-
-</html>
+{% endblock %}

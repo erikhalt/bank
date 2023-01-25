@@ -1,0 +1,28 @@
+{% extends "basetemplate.html" %}
+
+{%block title%}
+Customer
+{%endblock%}
+
+{% block content %}
+<div class="customerwithdepbox">
+    <form action="POST">
+        {{ form.csrf_token }}
+        <h1 class="Accountnamewithdrawldeposit">Account:{{account.Id}}-{{account.AccountType}}</h1>
+        {{form.amount}} <h1>Balance:{{account.Balance}}</h1>
+        <input type="submit" value="Spara">
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+<a href={{url_for('customer', id=customer.Id)}}><button
+        style="right: 10px; bottom: 10px; position: absolute; font-size: 25px;">Bakåt</button></a>
+
+{% endblock %}

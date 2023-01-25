@@ -20,7 +20,7 @@ class Customer(db.Model):
     NationalId = db.Column(db.String(20), unique=False, nullable=False)
     TelephoneCountryCode = db.Column(db.Integer, unique=False, nullable=False)
     Telephone = db.Column(db.String(20), unique=False, nullable=False)
-    EmailAddress = db.Column(db.String(50), unique=False, nullable=False)
+    EmailAddress = db.Column(db.String(50), unique=False, nullable=False)   
 
     Accounts = db.relationship('Account', backref='Customer',
      lazy=True)

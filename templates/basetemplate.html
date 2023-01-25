@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <title>
+        {% block title %}
+        Home
+        {% endblock %}
+    </title>
+</head>
+
+<body>
+    <div id="NAVBAR">
+        <div id="logo">
+            <div class="letterEv"></div>
+            <div class="letterEv"></div>
+            <div class="letterEv"></div>
+            <div class="letterEh"></div>
+        </div>
+
+        <div class="navbutton"><a href="http://127.0.0.1:5000/"><i class='bx bx-menu'>Home</i></a></div>
+        <div class="navbutton"><a href="http://127.0.0.1:5000/Customers"><i class='bx bx-menu'>Customers</i></a></div>
+        <div class="navbutton"><a href="http://127.0.0.1:5000/newcustomer"><i class='bx bx-menu'>New Customer</i></a>
+        </div>
+    </div>
+    <div id="ALLCONTENT">
+        {%block content %}{%endblock%}
+    </div>
+
+    <script src="scripts.js"></script>
+
+
+
+</body>
+
+</html>

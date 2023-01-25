@@ -1,0 +1,40 @@
+{% extends "basetemplate.html" %}
+
+{% block title %}
+Customers
+{% endblock %}
+
+
+{% block content %}
+<table class="tableofallcustomers">
+    <tr>
+        <th>ID</th>
+        <th>GivenName</th>
+        <th>SurName</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td>{{ customer.Id }}</td>
+        <td>{{ customer.GivenName }}</td>
+        <td>{{ customer.Surname }}</td>
+        <td><a href={{url_for('customer', id=customer.Id)}}><i class='bx bx-edit'></i></a></td>
+    </tr>
+    {% endfor %}
+    <tfoot>
+        <td>
+            {% if has_prev %}
+            <a href="/Customers?page={{ page - 1 }}"><i class='bx bxs-left-arrow-circle'></i></a>
+
+            {% endif %}
+        </td>
+        <td></td>
+        <td>
+            {% if has_next %}
+            <a href="/Customers?page={{ page + 1 }}"><i class='bx bxs-right-arrow-circle'></i></a>
+
+            {% endif %}
+        </td>
+    </tfoot>
+</table>
+
+{% endblock %}
