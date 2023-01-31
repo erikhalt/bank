@@ -6,10 +6,17 @@ Customer
 
 {% block content %}
 <div class="customerwithdepbox">
+
+    {% for field, errors in form.errors.items() %}
+    {{ form[field].label }}: {{ ', '.join(errors) }}
+    </br>
+    {% endfor %}
     <form action="POST">
         {{ form.csrf_token }}
         <h1 class="Accountnamewithdrawldeposit">Account:{{account.Id}}-{{account.AccountType}}</h1>
-        {{form.amount}} <h1>Balance:{{account.Balance}}</h1>
+        {{form.amount}}
+
+        <h1>Balance:{{account.Balance}}</h1>
         <input type="submit" value="Spara">
     </form>
 </div>

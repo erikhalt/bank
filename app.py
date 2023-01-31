@@ -12,6 +12,8 @@ db.init_app(app)
 migrate = Migrate(app,db)
 app.config['SECRET_KEY'] = os.urandom(32)
 
+
+
 @app.route("/")
 def startpage():
     customer = Customer.query.all()
@@ -44,8 +46,11 @@ def deposit(id,accountid):
 
     return render_template('customerdeposit.html', customer=customer, account=account)
 
+
+
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
 def withdrawl(id,accountid):
+    
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(Id=accountid).first()
     form = widthdrawldeposit()
@@ -54,7 +59,8 @@ def withdrawl(id,accountid):
         if  accounts.Balance >= form.amount.data:
             accounts.Balance -= form.amount.data
             db.session.commit()
-        redirect("/Customers")
+            # return redirect(url_for('customer', id=customer.Id))
+            return redirect('/Customer')
     
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=form)
 
@@ -65,21 +71,31 @@ def transfer(id):
 
     return render_template('customer.html', customer=customer, accounts=accounts)
 
-@app.route("/newcustomer", methods=['GET','POST'])
-def newcustomer():
-        form = newcustomerForm()
 
-        if form.validate_on_submit():
+
+
+
+
+
+
+
+
+
+# @app.route("/newcustomer", methods=['GET','POST'])
+# def newcustomer():
+#         form = newcustomerForm()
+
+#         if form.validate_on_submit():
         
-            #spara i databas
-            customer = Customer()
-            customer.GivenName = form.city.data
-            customer.City = form.city.data
-            customer.CountryCode = form.countryCode.data
-            db.session.add(customer)
-            db.session.commit()
-            return redirect("/Customers" )
-        return render_template('newcustomer.html', form=form)
+#             #spara i databas
+#             customer = Customer()
+#             customer.GivenName = form.city.data
+#             customer.City = form.city.data
+#             customer.CountryCode = form.countryCode.data
+#             db.session.add(customer)
+#             db.session.commit()
+#             return redirect("/Customers" )
+#         return render_template('newcustomer.html', form=form)
 
 if __name__  == "__main__":
     with app.app_context():
