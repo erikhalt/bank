@@ -26,7 +26,10 @@ def startpage():
     customer = Customer.query.all()
     return render_template('basetemplate.html', customer=customer)
 
-
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/")
 
 @app.route("/Customers")
 @auth_required()
@@ -97,7 +100,9 @@ def transfer(id):
 
 
 
-
+@app.route("/newcustomer")
+def newcustomer():
+    return redirect("/logout")
 # @app.route("/newcustomer", methods=['GET','POST'])
 # def newcustomer():
 #         form = newcustomerForm()
