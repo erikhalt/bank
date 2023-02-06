@@ -81,7 +81,22 @@ td {
     border: 4px solid #ff0000;
     background-color: lightgreen;
     width: 500px;
-    height: 200px;
+    height: 300px;
     top: 150px;
     left: 15%;
+}
+
+
+.customerinfo {
+    position: absolute;
+    width: 200px;
+    height: 500px;
+    margin: 20px;
+}
+
+.accountinfo {
+    position: relative;
+    width: 400px;
+    height: 500px;
+    left: 400px;
 }

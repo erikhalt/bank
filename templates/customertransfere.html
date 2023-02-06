@@ -6,17 +6,21 @@ Customer
 
 {% block content %}
 <div class="customerwithdepbox">
-    <h1>Deposit</h1>
+    <h1>Transfere</h1>
     {% for field, errors in form.errors.items() %}
     {{ form[field].label }}: {{ ', '.join(errors) }}
     </br>
     {% endfor %}
     <form method="post">
         {{ form.csrf_token }}
-        <h1 class="Accountnamewithdrawldeposit">Account:{{account.Id}}-{{account.AccountType}}</h1>
-        {{ form.amount() }}
 
-        <h1>Balance:{{account.Balance}}</h1>
+        {{ form.fromaccount() }}
+        {{ form.fromamount() }}
+        <label for="fromamount">FROM</label>
+        <br>
+        {{ form.recievingaccount() }}
+        <label for="recievingamount">TO</label>
+        <br>
         <input type="submit" value="Spara">
     </form>
 </div>

@@ -9,14 +9,20 @@ Customers
 <table class="tableofallcustomers">
     <tr>
         <th>ID</th>
-        <th>GivenName</th>
-        <th>SurName</th>
+        <th>Birthday</th>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Address</th>
+        <th>City</th>
     </tr>
     {% for customer in customers %}
     <tr>
         <td>{{ customer.Id }}</td>
+        <td>{{ customer.Birthday }}</td>
         <td>{{ customer.GivenName }}</td>
         <td>{{ customer.Surname }}</td>
+        <td>{{ customer.Streetaddress }}</td>
+        <td>{{ customer.City }}</td>
         <td><a href={{url_for('customer', id=customer.Id)}}><i class='bx bx-edit'></i></a></td>
     </tr>
     {% endfor %}
@@ -27,6 +33,10 @@ Customers
 
             {% endif %}
         </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td>
             {% if has_next %}

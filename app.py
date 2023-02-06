@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 import os
 from model import db, seedData, Customer, Account, Transaction
 from forms import *
 from flask_security import roles_accepted, auth_required, logout_user
-
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Password123@localhost/Bank'
@@ -20,6 +20,59 @@ app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
 
 
+def create_transaction_deposit(Amount,AccountId):
+    account = Account.query.filter_by(Id=AccountId).first()
+
+    newTransaction = Transaction
+    newTransaction.Date = datetime.now()
+    newTransaction.Amount = Amount
+    newTransaction.AccountId = AccountId
+    newTransaction.NewBalance = account.Balance + Amount
+    newTransaction.Operation = "Deposit"
+    newTransaction.Type = "Debit"
+    db.session.add(newTransaction)
+    db.session.commit()
+
+def create_transaction_withdrawl(Amount,AccountId):
+    account = Account.query.filter_by(Id=AccountId).first()
+
+    newTransaction = Transaction
+    newTransaction.Date = datetime.now()
+    newTransaction.Amount = Amount
+    newTransaction.AccountId = AccountId
+    newTransaction.NewBalance = account.Balance - Amount
+    newTransaction.Operation = "Withdrawl"
+    newTransaction.Type = "Credit"
+    
+    # db.session.add(newTransaction)
+    db.session.commit()
+
+def create_transaction_Transfer(Amount,To_AccountId,from_AccountId):
+    to_account = Account.query.filter_by(Id=To_AccountId).first()
+
+    newTransaction = Transaction
+    newTransaction.Date = datetime.now()
+    newTransaction.Amount = Amount
+    newTransaction.AccountId = To_AccountId
+    newTransaction.NewBalance = to_account.Balance + Amount
+    newTransaction.Operation = "Transfer"
+    newTransaction.Type = "Debit"
+    
+    # db.session.add(newTransaction)
+    db.session.commit()
+
+    from_account = Account.query.filter_by(Id=from_AccountId).first()
+
+    newTransaction = Transaction
+    newTransaction.Date = datetime.now()
+    newTransaction.Amount = Amount
+    newTransaction.AccountId = from_AccountId
+    newTransaction.NewBalance = from_account.Balance - Amount
+    newTransaction.Operation = "Transfer"
+    newTransaction.Type = "Credit"
+    
+    # db.session.add(newTransaction)
+    db.session.commit()
 
 @app.route("/")
 def startpage():
@@ -49,60 +102,95 @@ def custeomers():
 
 
 @app.route("/<id>")
+@auth_required()
+@roles_accepted("Admin","Staff")
 def customer(id):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(CustomerId=id)
+    totalbalance = 0
+    for account in accounts:
+        totalbalance += account.Balance
 
-    return render_template('customer.html', customer=customer, accounts=accounts)
+    return render_template('customer.html', totalbalance=totalbalance, customer=customer, accounts=accounts)
 
 
 
-@app.route("/<id>/Deposit<accountid>")
+@app.route("/<id>/Deposit<accountid>", methods=['GET','POST'])
+@auth_required()
+@roles_accepted("Admin","Staff")
 def deposit(id,accountid):
     customer = Customer.query.filter_by(Id=id).first()
-    account = Account.query.filter_by(Id=accountid).first()
+    accounts = Account.query.filter_by(Id=accountid).first()
 
-    return render_template('customerdeposit.html', customer=customer, account=account)
+    depositform = widthdrawldeposit()
+    
+    if depositform.validate_on_submit():
+        accounts.Balance += depositform.amount.data
+        db.session.commit()
+        create_transaction_deposit(depositform.amount.data,int(accountid))
+
+        return redirect('/Customers')
+    return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
 
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
+@auth_required()
+@roles_accepted("Admin","Staff")
 def withdrawl(id,accountid):
     
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(Id=accountid).first()
-    form = widthdrawldeposit()
 
-    if form.validate_on_submit():
-        if  accounts.Balance >= form.amount.data:
-            accounts.Balance -= form.amount.data
-            db.session.commit()
-            # return redirect(url_for('customer', id=customer.Id))
-            return redirect('/Customer')
+    withdrawlform = widthdrawldeposit()
     
-    return render_template('customerdeposit.html', customer=customer, account=accounts, form=form)
+    if withdrawlform.validate_on_submit():
+        if  accounts.Balance >= withdrawlform.amount.data:
+            accounts.Balance -= withdrawlform.amount.data
+            db.session.commit()
+        return redirect('/Customers')
+    return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
 
 
 
-@app.route("/<id>/Transfer")
+@app.route("/<id>/Transfer", methods=['GET','POST'])
+@auth_required()
+@roles_accepted("Admin","Staff")
 def transfer(id):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(CustomerId=id)
 
-    return render_template('customer.html', customer=customer, accounts=accounts)
+    listofaccounttypes = []
+
+    for element in accounts:
+        stringinselectfield = f'{element.Id}:{element.AccountType}'
+        listofaccounttypes.append(stringinselectfield)
+
+    form = transfere()
+    form.fromaccount.choices = listofaccounttypes
+    form.recievingaccount.choices = listofaccounttypes
+
+    if form.validate_on_submit():
+        for element in accounts:
+            fromaccountparts = form.fromaccount.data.split(':')
+            if element.Id == fromaccountparts[0]:
+                element.Balance -= form.fromamount.data
+                db.session.commit()
+
+        for element in accounts:
+            recievingaccountparts = form.recievingaccount.data.split(':')
+            if element.Id == recievingaccountparts[0]:
+                element.Balance += form.fromamount.data
+                db.session.commit()
+        return redirect(url_for('customer',id=id))
+
+    return render_template('customertransfere.html', customer=customer, accounts=accounts, form = form)
 
 
 
 
 
 
-
-
-
-
-@app.route("/newcustomer")
-def newcustomer():
-    return redirect("/logout")
 # @app.route("/newcustomer", methods=['GET','POST'])
 # def newcustomer():
 #         form = newcustomerForm()

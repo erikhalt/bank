@@ -15,3 +15,12 @@ class newcustomerForm(FlaskForm):
 
 class widthdrawldeposit(FlaskForm):
     amount = IntegerField('amount', validators=[validators.DataRequired()])
+
+
+def choicestransfere(list):
+    return list
+
+class transfere(FlaskForm):
+    fromaccount = SelectField('fromaccount',validators=[validators.DataRequired()])
+    recievingaccount = SelectField('recievingaccount',validators=[validators.DataRequired()])
+    fromamount = IntegerField('fromamount', validators=[validators.DataRequired()])

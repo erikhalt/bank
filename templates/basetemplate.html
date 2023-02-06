@@ -25,8 +25,9 @@
 
         <div class="navbutton"><a href="http://127.0.0.1:5000/"><i class='bx bx-menu'>Home</i></a></div>
         <div class="navbutton"><a href="http://127.0.0.1:5000/Customers"><i class='bx bx-menu'>Customers</i></a></div>
-        <div class="navbutton"><a href="http://127.0.0.1:5000/newcustomer"><i class='bx bx-menu'>New Customer</i></a>
-        </div>
+        {% if current_user.is_authenticated %}
+        <div class="navbutton"><a href="http://127.0.0.1:5000/logout"><i class='bx bx-log-out'>Logout</i></a></div>
+        {% endif %}
     </div>
     <div id="ALLCONTENT">
         {%block content %}{%endblock%}

@@ -5,19 +5,36 @@ Customer
 {%endblock%}
 
 {% block content %}
-<h1>{{customer.Id}}</h1>
+<div class="customerinfo">
+        <p>ID:{{customer.Id}}</p>
+        <p>Name:{{customer.GivenName}}</p>
+        <p>Surname:{{customer.Surname}}</p>
+        <p>Address:{{customer.Streetaddress}}</p>
+        <p>City:{{customer.City}}</p>
+        <p>Zipcode:{{customer.Zipcode}}</p>
+        <p>Country:{{customer.Country}}</p>
+        <p>CountryCode:{{customer.CountryCode}}</p>
+        <p>Birthday:{{customer.Birthday}}</p>
+        <p>NationalId:{{customer.NationalId}}</p>
+        <p>TelephoneCountryCode:{{customer.TelephoneCountryCode}}</p>
+        <p>Telephone:{{customer.Telephone}}</p>
+        <p>Email:{{customer.EmailAddress}}</p>
 
-{%for element in accounts%}
-<h1>
-    {{element.AccountType}} {{element.Balance}}
-</h1>
+</div>
 
-<a href={{url_for('deposit', id=customer.Id, accountid=element.Id) }}><button
-        class="customerchoices">Deposit</button></a>
-<a href={{url_for('withdrawl', id=customer.Id, accountid=element.Id)}}><button
-        class="customerchoices">Withdrawl</button></a>
-<a href={{url_for('transfer', id=customer.Id)}}><button class="customerchoices">Transfer</button></a>
+<div class="accountinfo">
+        {%for element in accounts%}
+        <h1>
+                {{element.Id}}: {{element.AccountType}} <br> Balance: {{element.Balance}};-
+        </h1>
+        <a href={{url_for('deposit', id=customer.Id, accountid=element.Id) }}><button
+                        class="customerchoices">Deposit</button></a>
+        <a href={{url_for('withdrawl', id=customer.Id, accountid=element.Id)}}><button
+                        class="customerchoices">Withdrawl</button></a>
+        <a href={{url_for('transfer', id=customer.Id)}}><button class="customerchoices">Transfer</button></a>
 
-{%endfor%}
+        {%endfor%}
+        <h1>Totalbalance: {{totalbalance}};-</h1>
 
+</div>
 {% endblock %}
