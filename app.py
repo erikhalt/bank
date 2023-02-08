@@ -23,7 +23,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "strict"
 def create_transaction_deposit(Amount,AccountId):
     account = Account.query.filter_by(Id=AccountId).first()
 
-    newTransaction = Transaction
+    newTransaction = Transaction()
     newTransaction.Date = datetime.now()
     newTransaction.Amount = Amount
     newTransaction.AccountId = AccountId
@@ -129,7 +129,7 @@ def deposit(id,accountid):
         db.session.commit()
         create_transaction_deposit(depositform.amount.data,int(accountid))
 
-        return redirect('/Customers')
+        return redirect(url_for('customer',id=id))
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
 
 
@@ -148,7 +148,8 @@ def withdrawl(id,accountid):
         if  accounts.Balance >= withdrawlform.amount.data:
             accounts.Balance -= withdrawlform.amount.data
             db.session.commit()
-        return redirect('/Customers')
+            create_transaction_withdrawl(withdrawlform.amount.data,int(accountid))
+        return redirect(url_for('customer', id=id))
     return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
 
 
@@ -163,7 +164,7 @@ def transfer(id):
     listofaccounttypes = []
 
     for element in accounts:
-        stringinselectfield = f'{element.Id}:{element.AccountType}'
+        stringinselectfield = f'{element.Id}:{element.AccountType}:{element.Balance}'
         listofaccounttypes.append(stringinselectfield)
 
     form = transfere()
@@ -171,18 +172,30 @@ def transfer(id):
     form.recievingaccount.choices = listofaccounttypes
 
     if form.validate_on_submit():
+        to_account_id = 0
+        from_account_id = 0
+
         for element in accounts:
             fromaccountparts = form.fromaccount.data.split(':')
             if element.Id == fromaccountparts[0]:
-                element.Balance -= form.fromamount.data
-                db.session.commit()
+                from_account_id = element.Id
 
         for element in accounts:
             recievingaccountparts = form.recievingaccount.data.split(':')
             if element.Id == recievingaccountparts[0]:
-                element.Balance += form.fromamount.data
-                db.session.commit()
-        return redirect(url_for('customer',id=id))
+                to_account_id = element.Id
+
+        from_account = Account.query.filter_by(Id=from_account_id).first()
+        to_account = Account.query.filter_by(Id=to_account_id).first()
+
+        if from_account.Balance >= form.fromamount.data:
+            from_account.Balance -= form.fromamount.data
+            to_account.Balance += form.fromamount.data
+            create_transaction_Transfer(form.fromamount.data,to_account_id,from_account_id)
+
+            return redirect(url_for('customer',id=id))
+        else:
+            form.fromamount.errors += "Belopp för stort"
 
     return render_template('customertransfere.html', customer=customer, accounts=accounts, form = form)
 

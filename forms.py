@@ -6,6 +6,9 @@ def emailVaild(form, field):
     if not field.data.endswith('.se'):
         raise ValidationError('Invalid Email!')
 
+def toHighAmount():
+    raise ValidationError('Insufficient funds')
+
 
 class newcustomerForm(FlaskForm):
     name = StringField('name', validators=[validators.DataRequired(),emailVaild])
