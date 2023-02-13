@@ -7,23 +7,50 @@ Customers
 
 {% block content %}
 <form method="get">
-    <input type="text" placeholder="search" value="{{ search }}" name="search">
-    <input class="btn" type=submit value="Sök">
+    <input type="text" placeholder="search" value="{{ search }}" name="search" id="searchbar">
+    <input class="btn" type=submit value="Sök" id="searchbar">
 </form>
 
 <table class="tableofallcustomers">
     <tr>
-        <th>ID</th>
-        <th>Birthday</th>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Address</th>
-        <th>City</th>
+        <th>ID
+        </th>
+        <th>Name
+            <a href="/Customers?sortColumn=Name&sortOrder=asc&search={{ search }}">
+                <i class='bx bx-up-arrow-alt'></i>
+            </a>
+            <a href="/Customers?sortColumn=Name&sortOrder=desc&search={{ search }}">
+                <i class='bx bx-down-arrow-alt'></i>
+            </a>
+        </th>
+        <th>Surname
+            <a href="/Customers?sortColumn=Surname&sortOrder=asc&search={{ search }}">
+                <i class='bx bx-up-arrow-alt'></i>
+            </a>
+            <a href="/Customers?sortColumn=Surname&sortOrder=desc&search={{ search }}">
+                <i class='bx bx-down-arrow-alt'></i>
+            </a>
+        </th>
+        <th>Address
+            <a href="/Customers?sortColumn=Address&sortOrder=asc&search={{ search }}">
+                <i class='bx bx-up-arrow-alt'></i>
+            </a>
+            <a href="/Customers?sortColumn=Address&sortOrder=desc&search={{ search }}">
+                <i class='bx bx-down-arrow-alt'></i>
+            </a>
+        </th>
+        <th>City
+            <a href="/Customers?sortColumn=City&sortOrder=asc&search={{ search }}">
+                <i class='bx bx-up-arrow-alt'></i>
+            </a>
+            <a href="/Customers?sortColumn=City&sortOrder=desc&search={{ search }}">
+                <i class='bx bx-down-arrow-alt'></i>
+            </a>
+        </th>
     </tr>
     {% for customer in customers %}
     <tr>
         <td>{{ customer.Id }}</td>
-        <td>{{ customer.Birthday }}</td>
         <td>{{ customer.GivenName }}</td>
         <td>{{ customer.Surname }}</td>
         <td>{{ customer.Streetaddress }}</td>
@@ -38,7 +65,6 @@ Customers
 
             {% endif %}
         </td>
-        <td></td>
         <td></td>
         <td></td>
         <td></td>

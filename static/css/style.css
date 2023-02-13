@@ -100,3 +100,10 @@ td {
     height: 500px;
     left: 400px;
 }
+
+#searchbar {
+    position: relative;
+    margin: 20px;
+    top: 55px;
+    left: 41px;
+}

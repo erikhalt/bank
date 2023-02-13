@@ -90,20 +90,49 @@ def logout():
 def custeomers():
     page = int(request.args.get('page', 1))
     searchword = request.args.get('search','')
+    sortColumn = request.args.get('sortColumn','Name')
+    sortOrder = request.args.get('sortOrder','asc')
     
     list_of_customers = Customer.query
     list_of_customers = list_of_customers.filter(Customer.GivenName.like('%' + searchword + '%') | Customer.City.like('%' + searchword + '%'))
 
+    
+    if sortColumn == "Name":
+        if sortOrder == 'asc':
+            list_of_customers = list_of_customers.order_by(Customer.GivenName.asc())
+        else:
+            list_of_customers = list_of_customers.order_by(Customer.GivenName.desc())
+
+    
+    elif sortColumn == "Surname":
+        if sortOrder == 'asc':
+            list_of_customers = list_of_customers.order_by(Customer.Surname.asc())
+        else:
+            list_of_customers = list_of_customers.order_by(Customer.Surname.desc())
+    
+    elif sortColumn == "Address":
+        if sortOrder == 'asc':
+            list_of_customers = list_of_customers.order_by(Customer.Streetaddress.asc())
+        else:
+            list_of_customers = list_of_customers.order_by(Customer.Streetaddress.desc())
+
+    elif sortColumn == "City":
+        if sortOrder == 'asc':
+            list_of_customers = list_of_customers.order_by(Customer.City.asc())
+        else:
+            list_of_customers = list_of_customers.order_by(Customer.City.desc())    
+    
     paginationObject = list_of_customers.paginate(page=page, per_page=20, error_out=False)
     
-
     return render_template('customers.html', 
                         customers = paginationObject.items,
                         has_next = paginationObject.has_next,
                         has_prev = paginationObject.has_prev,
                         pages = paginationObject.pages,
                         page = page,
-                        search = searchword)
+                        search = searchword,
+                        sortColumn = sortColumn,
+                        sortOrder = sortOrder,)
 
 
 
