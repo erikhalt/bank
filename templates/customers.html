@@ -6,6 +6,11 @@ Customers
 
 
 {% block content %}
+<form method="get">
+    <input type="text" placeholder="search" value="{{ search }}" name="search">
+    <input class="btn" type=submit value="Sök">
+</form>
+
 <table class="tableofallcustomers">
     <tr>
         <th>ID</th>

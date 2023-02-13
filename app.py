@@ -88,16 +88,22 @@ def logout():
 @auth_required()
 @roles_accepted("Admin","Staff")
 def custeomers():
-    customers = Customer.query
     page = int(request.args.get('page', 1))
-    paginationObject = customers.paginate(page=page, per_page=20, error_out=False)
+    searchword = request.args.get('search','')
+    
+    list_of_customers = Customer.query
+    list_of_customers = list_of_customers.filter(Customer.GivenName.like('%' + searchword + '%') | Customer.City.like('%' + searchword + '%'))
+
+    paginationObject = list_of_customers.paginate(page=page, per_page=20, error_out=False)
+    
 
     return render_template('customers.html', 
                         customers = paginationObject.items,
                         has_next = paginationObject.has_next,
                         has_prev = paginationObject.has_prev,
                         pages = paginationObject.pages,
-                        page = page,)
+                        page = page,
+                        search = searchword)
 
 
 
