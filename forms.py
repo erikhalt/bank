@@ -27,3 +27,6 @@ class transfere(FlaskForm):
     fromaccount = SelectField('fromaccount',validators=[validators.DataRequired()])
     recievingaccount = SelectField('recievingaccount',validators=[validators.DataRequired()])
     fromamount = IntegerField('fromamount', validators=[validators.DataRequired()])
+
+class id_search(FlaskForm):
+    id_search = StringField('id_search', validators=[validators.DataRequired()])

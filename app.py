@@ -77,7 +77,8 @@ def create_transaction_Transfer(Amount,To_AccountId,from_AccountId):
 @app.route("/")
 def startpage():
     customer = Customer.query.all()
-    return render_template('basetemplate.html', customer=customer)
+    idsearchform = id_search()
+    return render_template('basetemplate.html', customer=customer, idsearchform = idsearchform)
 
 @app.route("/logout")
 def logout():
@@ -123,7 +124,7 @@ def custeomers():
             list_of_customers = list_of_customers.order_by(Customer.City.desc())    
     
     paginationObject = list_of_customers.paginate(page=page, per_page=20, error_out=False)
-    
+    idsearchform = id_search()
     return render_template('customers.html', 
                         customers = paginationObject.items,
                         has_next = paginationObject.has_next,
@@ -132,7 +133,8 @@ def custeomers():
                         page = page,
                         search = searchword,
                         sortColumn = sortColumn,
-                        sortOrder = sortOrder,)
+                        sortOrder = sortOrder,
+                        idsearchform = idsearchform)
 
 
 
