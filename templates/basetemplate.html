@@ -26,7 +26,7 @@
         <div class="navbutton"><a href="http://127.0.0.1:5000/"><i class='bx bx-menu'>Home</i></a></div>
         <div class="navbutton"><a href="http://127.0.0.1:5000/Customers"><i class='bx bx-menu'>Customers</i></a></div>
         {% if current_user.is_authenticated %}
-        <div>
+        <div class="navbutton">
             <form action="">
                 <input placeholder="Search ID" name="id_search" value="id_search">
             </form>

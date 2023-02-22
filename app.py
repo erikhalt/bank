@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 import os
@@ -6,6 +6,7 @@ from model import db, seedData, Customer, Account, Transaction
 from forms import *
 from flask_security import roles_accepted, auth_required, logout_user
 from datetime import datetime
+# from wtforms import Form
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Password123@localhost/Bank'
@@ -36,7 +37,7 @@ def create_transaction_deposit(Amount,AccountId):
 def create_transaction_withdrawl(Amount,AccountId):
     account = Account.query.filter_by(Id=AccountId).first()
 
-    newTransaction = Transaction
+    newTransaction = Transaction()
     newTransaction.Date = datetime.now()
     newTransaction.Amount = Amount
     newTransaction.AccountId = AccountId
@@ -44,13 +45,13 @@ def create_transaction_withdrawl(Amount,AccountId):
     newTransaction.Operation = "Withdrawl"
     newTransaction.Type = "Credit"
     
-    # db.session.add(newTransaction)
+    db.session.add(newTransaction)
     db.session.commit()
 
 def create_transaction_Transfer(Amount,To_AccountId,from_AccountId):
     to_account = Account.query.filter_by(Id=To_AccountId).first()
 
-    newTransaction = Transaction
+    newTransaction = Transaction()
     newTransaction.Date = datetime.now()
     newTransaction.Amount = Amount
     newTransaction.AccountId = To_AccountId
@@ -58,12 +59,12 @@ def create_transaction_Transfer(Amount,To_AccountId,from_AccountId):
     newTransaction.Operation = "Transfer"
     newTransaction.Type = "Debit"
     
-    # db.session.add(newTransaction)
+    db.session.add(newTransaction)
     db.session.commit()
 
     from_account = Account.query.filter_by(Id=from_AccountId).first()
 
-    newTransaction = Transaction
+    newTransaction = Transaction()
     newTransaction.Date = datetime.now()
     newTransaction.Amount = Amount
     newTransaction.AccountId = from_AccountId
@@ -71,13 +72,16 @@ def create_transaction_Transfer(Amount,To_AccountId,from_AccountId):
     newTransaction.Operation = "Transfer"
     newTransaction.Type = "Credit"
     
-    # db.session.add(newTransaction)
+    db.session.add(newTransaction)
     db.session.commit()
 
 @app.route("/")
 def startpage():
     customer = Customer.query.all()
     idsearchform = id_search()
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
     return render_template('basetemplate.html', customer=customer, idsearchform = idsearchform)
 
 @app.route("/logout")
@@ -186,7 +190,9 @@ def withdrawl(id,accountid):
             accounts.Balance -= withdrawlform.amount.data
             db.session.commit()
             create_transaction_withdrawl(withdrawlform.amount.data,int(accountid))
-        return redirect(url_for('customer', id=id))
+            return redirect(url_for('customer', id=id))
+        elif accounts.Balance < withdrawlform.amount.data:
+            withdrawlform.amount.errors.append('För stort belopp')
     return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
 
 
@@ -204,37 +210,37 @@ def transfer(id):
         stringinselectfield = f'{element.Id}:{element.AccountType}:{element.Balance}'
         listofaccounttypes.append(stringinselectfield)
 
-    form = transfere()
-    form.fromaccount.choices = listofaccounttypes
-    form.recievingaccount.choices = listofaccounttypes
+    transfere_form = transfere()
+    transfere_form.fromaccount.choices = listofaccounttypes
+    transfere_form.recievingaccount.choices = listofaccounttypes
 
-    if form.validate_on_submit():
+    if transfere_form.validate_on_submit():
         to_account_id = 0
         from_account_id = 0
 
         for element in accounts:
-            fromaccountparts = form.fromaccount.data.split(':')
-            if element.Id == fromaccountparts[0]:
+            fromaccountparts = transfere_form.fromaccount.data.split(':')
+            if str(element.Id) == fromaccountparts[0]:
                 from_account_id = element.Id
 
         for element in accounts:
-            recievingaccountparts = form.recievingaccount.data.split(':')
-            if element.Id == recievingaccountparts[0]:
+            recievingaccountparts = transfere_form.recievingaccount.data.split(':')
+            if str(element.Id) == recievingaccountparts[0]:
                 to_account_id = element.Id
 
         from_account = Account.query.filter_by(Id=from_account_id).first()
         to_account = Account.query.filter_by(Id=to_account_id).first()
 
-        if from_account.Balance >= form.fromamount.data:
-            from_account.Balance -= form.fromamount.data
-            to_account.Balance += form.fromamount.data
-            create_transaction_Transfer(form.fromamount.data,to_account_id,from_account_id)
+        if from_account.Balance >= transfere_form.fromamount.data:
+            from_account.Balance -= transfere_form.fromamount.data
+            to_account.Balance += transfere_form.fromamount.data
+            create_transaction_Transfer(transfere_form.fromamount.data,to_account_id,from_account_id)
 
             return redirect(url_for('customer',id=id))
         else:
-            form.fromamount.errors += "Belopp för stort"
+            transfere_form.fromamount.errors.append('För stort belopp')
 
-    return render_template('customertransfere.html', customer=customer, accounts=accounts, form = form)
+    return render_template('customertransfere.html', customer=customer, accounts=accounts, form = transfere_form)
 
 
 
