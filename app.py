@@ -80,9 +80,11 @@ def startpage():
     customer = Customer.query.all()
     idsearchform = id_search()
     search = request.args.get('id_search', '')
+    customerAmount = len(Customer.query.all())
+    accountAmount = len(Account.query.all())
     if search.isnumeric():
         return redirect(url_for('customer', id=search))
-    return render_template('basetemplate.html', customer=customer, idsearchform = idsearchform)
+    return render_template('home.html', customer=customer, idsearchform = idsearchform, customerAmount=customerAmount, accountAmount=accountAmount)
 
 @app.route("/logout")
 def logout():
