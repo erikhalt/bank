@@ -102,6 +102,10 @@ def custeomers():
     list_of_customers = list_of_customers.filter(Customer.GivenName.like('%' + searchword + '%') | Customer.City.like('%' + searchword + '%'))
 
     
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
     if sortColumn == "Name":
         if sortOrder == 'asc':
             list_of_customers = list_of_customers.order_by(Customer.GivenName.asc())
@@ -152,6 +156,10 @@ def customer(id):
     for account in accounts:
         totalbalance += account.Balance
 
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
     return render_template('customer.html', totalbalance=totalbalance, customer=customer, accounts=accounts)
 
 
@@ -165,6 +173,10 @@ def deposit(id,accountid):
 
     depositform = widthdrawldeposit()
     
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
     if depositform.validate_on_submit():
         accounts.Balance += depositform.amount.data
         db.session.commit()
@@ -177,17 +189,27 @@ def deposit(id,accountid):
 @auth_required()
 @roles_accepted("Admin","Staff")
 def transaction(id,accountid):
-    accountTransaction = Transaction.query.filter_by(AccountId=accountid).first()
+    accountTransaction = Transaction.query.filter_by(AccountId=accountid).order_by(Transaction.Date.desc())
     customer = Customer.query.filter_by(Id=id).first()
 
-    return render_template('transactions.html', accountTransaction = accountTransaction, customer = customer)
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
+    
+    return render_template('transactions.html', accountTransaction=accountTransaction, customer=customer)
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
 @auth_required()
 @roles_accepted("Admin","Staff")
 def withdrawl(id,accountid):
-    
+
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
+
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(Id=accountid).first()
 
@@ -213,6 +235,11 @@ def transfer(id):
     accounts = Account.query.filter_by(CustomerId=id)
 
     listofaccounttypes = []
+
+    search = request.args.get('id_search', '')
+    if search.isnumeric():
+        return redirect(url_for('customer', id=search))
+
 
     for element in accounts:
         stringinselectfield = f'{element.Id}:{element.AccountType}:{element.Balance}'

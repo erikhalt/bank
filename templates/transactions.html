@@ -24,9 +24,8 @@ Transaction
 
 <div class="accountinfo">
         {%for element in accountTransaction%}
-        <li>
-                <ul>{{element.Id}}:{{element.Type}} {{element.Amount}}:- {{element.Operation}} | {{element.Date}}</ul>
-        </li>
+        <ul>{{element.Id}}:{{element.Type}} {{element.Amount}}:- {{element.Operation}} | {{element.Date}}</ul>
+        <ul></ul>
         {%endfor%}
 </div>
 
