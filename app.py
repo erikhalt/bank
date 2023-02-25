@@ -173,6 +173,14 @@ def deposit(id,accountid):
         return redirect(url_for('customer',id=id))
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
 
+@app.route("/<id>/<accountid>transactions")
+@auth_required()
+@roles_accepted("Admin","Staff")
+def transaction(id,accountid):
+    accountTransaction = Transaction.query.filter_by(AccountId=accountid).first()
+    customer = Customer.query.filter_by(Id=id).first()
+
+    return render_template('transactions.html', accountTransaction = accountTransaction, customer = customer)
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])

@@ -1,0 +1,33 @@
+{% extends "basetemplate.html" %}
+
+{%block title%}
+Transaction
+{%endblock%}
+
+{% block content %}
+<div class="customerinfo">
+        <p>ID:{{customer.Id}}</p>
+        <p>Name:{{customer.GivenName}}</p>
+        <p>Surname:{{customer.Surname}}</p>
+        <p>Address:{{customer.Streetaddress}}</p>
+        <p>City:{{customer.City}}</p>
+        <p>Zipcode:{{customer.Zipcode}}</p>
+        <p>Country:{{customer.Country}}</p>
+        <p>CountryCode:{{customer.CountryCode}}</p>
+        <p>Birthday:{{customer.Birthday}}</p>
+        <p>NationalId:{{customer.NationalId}}</p>
+        <p>TelephoneCountryCode:{{customer.TelephoneCountryCode}}</p>
+        <p>Telephone:{{customer.Telephone}}</p>
+        <p>Email:{{customer.EmailAddress}}</p>
+
+</div>
+
+<div class="accountinfo">
+        {%for element in accountTransaction%}
+        <li>
+                <ul>{{element.Id}}:{{element.Type}} {{element.Amount}}:- {{element.Operation}} | {{element.Date}}</ul>
+        </li>
+        {%endfor%}
+</div>
+
+{% endblock %}

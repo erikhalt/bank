@@ -31,6 +31,8 @@ Customer
                         class="customerchoices">Deposit</button></a>
         <a href={{url_for('withdrawl', id=customer.Id, accountid=element.Id)}}><button
                         class="customerchoices">Withdrawl</button></a>
+        <a href={{url_for('transaction', id=customer.Id, accountid=element.Id)}}><button
+                        class="customerchoices">Transactions</button></a>
         <a href={{url_for('transfer', id=customer.Id)}}><button class="customerchoices">Transfer</button></a>
 
         {%endfor%}
