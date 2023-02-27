@@ -29,5 +29,7 @@
         "env.bak{,/**}",
         "venv.bak{,/**}",
         ".vscode{,/**}"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/1fa22c7b-5060-4ef5-a5e2-68189bcdb2c0/resourceGroups/bank22/providers/Microsoft.Web/sites/bank23inl",
+    "appService.deploySubpath": "."
 }
