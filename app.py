@@ -9,7 +9,7 @@ from datetime import datetime
 # from wtforms import Form
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Password123@localhost/Bank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bankroute:Salahf98@inlbank22.mysql.database.azure.com/Bank'
 db.app = app
 db.init_app(app)
 migrate = Migrate(app,db)
