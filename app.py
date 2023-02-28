@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 import os
-from model import db, seedData, Customer, Account, Transaction
+from model import db, seedData, Customer, Account, Transaction,user_datastore
 from forms import *
-from flask_security import roles_accepted, auth_required, logout_user
+from flask_security import roles_accepted, auth_required, logout_user, Security,SQLAlchemyUserDatastore
 from datetime import datetime
 # from wtforms import Form
 
@@ -19,7 +19,9 @@ app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDP
 app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
 app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
+app.security = Security(app, user_datastore)
 
+SECURITY_FRESHNESS_GRACE_PERIOD = 1
 
 def create_transaction_deposit(Amount,AccountId):
     account = Account.query.filter_by(Id=AccountId).first()
@@ -92,7 +94,7 @@ def logout():
     return redirect("/")
 
 @app.route("/Customers")
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def custeomers():
     page = int(request.args.get('page', 1))
@@ -149,7 +151,7 @@ def custeomers():
 
 
 @app.route("/<id>")
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def customer(id):
     customer = Customer.query.filter_by(Id=id).first()
@@ -167,7 +169,7 @@ def customer(id):
 
 
 @app.route("/<id>/Deposit<accountid>", methods=['GET','POST'])
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def deposit(id,accountid):
     customer = Customer.query.filter_by(Id=id).first()
@@ -188,7 +190,7 @@ def deposit(id,accountid):
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
 
 @app.route("/<id>/<accountid>transactions")
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def transaction(id,accountid):
     accountTransaction = Transaction.query.filter_by(AccountId=accountid).order_by(Transaction.Date.desc())
@@ -203,7 +205,7 @@ def transaction(id,accountid):
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def withdrawl(id,accountid):
 
@@ -230,7 +232,7 @@ def withdrawl(id,accountid):
 
 
 @app.route("/<id>/Transfer", methods=['GET','POST'])
-# @auth_required()
+@auth_required()
 @roles_accepted("Admin","Staff")
 def transfer(id):
     customer = Customer.query.filter_by(Id=id).first()
