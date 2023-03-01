@@ -96,7 +96,7 @@ def logout():
 @app.route("/Customers")
 @auth_required()
 @roles_accepted("Admin","Staff")
-def custeomers():
+def customers():
     page = int(request.args.get('page', 1))
     searchword = request.args.get('search','')
     sortColumn = request.args.get('sortColumn','Name')
