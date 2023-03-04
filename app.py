@@ -169,8 +169,8 @@ def customer(id):
 
 
 @app.route("/<id>/Deposit<accountid>", methods=['GET','POST'])
-@auth_required()
-@roles_accepted("Admin","Staff")
+# @auth_required()
+# @roles_accepted("Admin","Staff")
 def deposit(id,accountid):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(Id=accountid).first()
@@ -182,11 +182,14 @@ def deposit(id,accountid):
         return redirect(url_for('customer', id=search))
 
     if depositform.validate_on_submit():
-        accounts.Balance += depositform.amount.data
-        db.session.commit()
-        create_transaction_deposit(depositform.amount.data,int(accountid))
+        if depositform.amount.data < 0:
+            depositform.amount.errors += "du kan ej sätta in ett negativt belopp"
+        else:
+            accounts.Balance += depositform.amount.data
+            db.session.commit()
+            create_transaction_deposit(depositform.amount.data,int(accountid))
 
-        return redirect(url_for('customer',id=id))
+            return redirect(url_for('customer',id=id))
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
 
 @app.route("/<id>/<accountid>transactions")
@@ -205,8 +208,8 @@ def transaction(id,accountid):
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
-@auth_required()
-@roles_accepted("Admin","Staff")
+# @auth_required()
+# @roles_accepted("Admin","Staff")
 def withdrawl(id,accountid):
 
     search = request.args.get('id_search', '')
@@ -220,20 +223,24 @@ def withdrawl(id,accountid):
     withdrawlform = widthdrawldeposit()
     
     if withdrawlform.validate_on_submit():
-        if  accounts.Balance >= withdrawlform.amount.data:
-            accounts.Balance -= withdrawlform.amount.data
-            db.session.commit()
-            create_transaction_withdrawl(withdrawlform.amount.data,int(accountid))
-            return redirect(url_for('customer', id=id))
-        elif accounts.Balance < withdrawlform.amount.data:
-            withdrawlform.amount.errors.append('För stort belopp')
-    return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
+        if withdrawlform.amount.data < 0:
+            withdrawlform.amount.errors += 'du kan ej ta ut ett negativt belopp'
+        else:    
+            if  accounts.Balance >= withdrawlform.amount.data:
+                accounts.Balance -= withdrawlform.amount.data
+                db.session.commit()
+                create_transaction_withdrawl(withdrawlform.amount.data,int(accountid))
+                return redirect(url_for('customer', id=id))
+            elif accounts.Balance < withdrawlform.amount.data:
+                errormessage = 'Belopp för stort'
+                withdrawlform.amount.errors += errormessage
+        return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
 
 
 
 @app.route("/<id>/Transfer", methods=['GET','POST'])
-@auth_required()
-@roles_accepted("Admin","Staff")
+# @auth_required()
+# @roles_accepted("Admin","Staff")
 def transfer(id):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(CustomerId=id)
@@ -276,8 +283,9 @@ def transfer(id):
             create_transaction_Transfer(transfere_form.fromamount.data,to_account_id,from_account_id)
 
             return redirect(url_for('customer',id=id))
-        else:
-            transfere_form.fromamount.errors.append('För stort belopp')
+        if from_account.Balance < transfere_form.fromamount.data:
+            errormessage = 'Belopp för stort'
+            transfere_form.fromamount.errors += errormessage
 
     return render_template('customertransfere.html', customer=customer, accounts=accounts, form = transfere_form)
 
