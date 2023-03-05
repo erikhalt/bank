@@ -14,7 +14,7 @@ Customers
 
     <table class="tableofallcustomers">
         <tr>
-            <th>ID
+            <th>Personnummer
             </th>
             <th>Name
                 <a href="/Customers?sortColumn=Name&sortOrder=asc&search={{ search }}">
@@ -51,7 +51,7 @@ Customers
         </tr>
         {% for customer in customers %}
         <tr>
-            <td>{{ customer.Id }}</td>
+            <td>{{ customer.NationalId }}</td>
             <td>{{ customer.GivenName }}</td>
             <td>{{ customer.Surname }}</td>
             <td>{{ customer.Streetaddress }}</td>

@@ -113,7 +113,7 @@ def customers():
     
     list_of_customers = Customer.query
     list_of_customers = list_of_customers.filter(Customer.GivenName.like('%' + searchword + '%') | Customer.City.like('%' + searchword + '%'))
-
+    
     
     search = request.args.get('id_search', '')
     if search.isnumeric():
@@ -145,6 +145,7 @@ def customers():
             list_of_customers = list_of_customers.order_by(Customer.City.desc())    
     
     paginationObject = list_of_customers.paginate(page=page, per_page=20, error_out=False)
+    #Har suttit 20per page enbart för att det blir jättefult med 50....
     idsearchform = id_search()
     return render_template('customers.html', 
                         customers = paginationObject.items,
@@ -285,16 +286,21 @@ def transfer(id):
 
         from_account = Account.query.filter_by(Id=from_account_id).first()
         to_account = Account.query.filter_by(Id=to_account_id).first()
+        if from_account_id == to_account_id:
+            transfere_form.fromaccount.errors += 'Kan inte överföra till pengar mellan samma konto'
+        elif transfere_form.fromamount.data < 0:
+            transfere_form.fromamount.errors += 'Kan inte överföra ett negativt belopp'
 
-        if from_account.Balance >= transfere_form.fromamount.data:
-            from_account.Balance -= transfere_form.fromamount.data
-            to_account.Balance += transfere_form.fromamount.data
-            create_transaction_Transfer(transfere_form.fromamount.data,to_account_id,from_account_id)
+        else:
+            if from_account.Balance >= transfere_form.fromamount.data:
+                from_account.Balance -= transfere_form.fromamount.data
+                to_account.Balance += transfere_form.fromamount.data
+                create_transaction_Transfer(transfere_form.fromamount.data,to_account_id,from_account_id)
 
-            return redirect(url_for('customer',id=id))
-        if from_account.Balance < transfere_form.fromamount.data:
-            errormessage = 'Belopp för stort'
-            transfere_form.fromamount.errors += errormessage
+                return redirect(url_for('customer',id=id))
+            if from_account.Balance < transfere_form.fromamount.data:
+                errormessage = 'Belopp för stort'
+                transfere_form.fromamount.errors += errormessage
 
     return render_template('customertransfere.html', customer=customer, accounts=accounts, form = transfere_form)
 

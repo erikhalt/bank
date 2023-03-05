@@ -9,6 +9,10 @@ def emailVaild(form, field):
 def toHighAmount():
     raise ValidationError('Insufficient funds')
 
+def onlyNumber(form, field):
+    if not form.data.isnumeric():
+        raise ValidationError('Kan enbart söka på siffror')
+
 
 class newcustomerForm(FlaskForm):
     name = StringField('name', validators=[validators.DataRequired(),emailVaild])
@@ -29,7 +33,7 @@ class transfere(FlaskForm):
     fromamount = IntegerField('fromamount', validators=[validators.DataRequired()])
 
 class id_search(FlaskForm):
-    id_search = StringField('id_search', validators=[validators.DataRequired()])
+    id_search = IntegerField('id_search', validators=[validators.DataRequired(),onlyNumber])
 
 class forgotpasswordform(FlaskForm):
     email = EmailField('email',validators=[emailVaild,validators.DataRequired(),validators.Email()])

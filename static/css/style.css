@@ -132,13 +132,14 @@ td {
 
 .customerwrap {
     border: 5px solid orangered;
-    width: 710px;
-    height: 630px;
+    width: 780px;
+    height: 635px;
     padding: 1px;
     background-color: lightgreen;
     position: relative;
     left: 20%;
     top: 30px;
+
 }
 
 #tablecustomersearch {
