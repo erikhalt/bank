@@ -14,7 +14,7 @@ Customer
         {{ form.fromaccount() }}
 
         {% for field, errors in form.errors.items() %}
-        {{ ', '.join(errors) }}
+        {{ ''.join(errors) }}
         </br>
         {% endfor %}
         {{ form.fromamount() }}

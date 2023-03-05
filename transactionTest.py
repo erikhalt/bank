@@ -58,7 +58,7 @@ class TransactionsTest(unittest.TestCase):
         with test_client:
             url = "/1/Withdrawl1"
             response = test_client.post(url, data={"amount":"300"})
-            s = response.data.decode("utf-8").replace(', ','') 
+            s = response.data.decode("utf-8")
             ok = 'Belopp för stort' in s
             self.assertTrue(ok)                
 
@@ -67,7 +67,7 @@ class TransactionsTest(unittest.TestCase):
         with test_client:
             url = "/1/Transfer"
             response = test_client.post(url, data={"fromamount":"300","fromaccount":"1:Test:200","recievingaccount":"2:Test2:200"})
-            s = response.data.decode("utf-8").replace(', ','') 
+            s = response.data.decode("utf-8") 
             ok = 'Belopp för stort' in s
             self.assertTrue(ok)                
 
@@ -76,7 +76,7 @@ class TransactionsTest(unittest.TestCase):
         with test_client:
             url = "/1/Deposit1"
             response = test_client.post(url, data={"amount":"-100"})
-            s = response.data.decode("utf-8").replace(', ','') 
+            s = response.data.decode("utf-8") 
             ok = 'du kan ej sätta in ett negativt belopp' in s
             self.assertTrue(ok)                
 
@@ -85,7 +85,7 @@ class TransactionsTest(unittest.TestCase):
         with test_client:
             url = "/1/Withdrawl1"
             response = test_client.post(url, data={"amount":"-100"})
-            s = response.data.decode("utf-8").replace(', ','') 
+            s = response.data.decode("utf-8")
             ok = 'du kan ej ta ut ett negativt belopp' in s
             self.assertTrue(ok)                
             

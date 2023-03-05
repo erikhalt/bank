@@ -15,7 +15,6 @@
     left: 200px;
     background-color: lightblue;
     overflow: hidden;
-    overflow-y: auto;
 }
 
 #logo {
@@ -60,7 +59,7 @@ a {
 }
 
 .tableofallcustomers {
-    position: relative;
+    position: absolute;
     left: 50px;
     top: 50px;
 }
@@ -73,37 +72,94 @@ td {
 
 .Accountnamewithdrawldeposit {
     position: relative;
-    color: #ff0000;
+    color: orangered;
 }
 
 .customerwithdepbox {
     position: relative;
-    border: 4px solid #ff0000;
+    border: 15px orangered solid;
     background-color: lightgreen;
     width: 500px;
     height: 300px;
     top: 150px;
     left: 15%;
+    padding: 20px;
 }
 
 
 .customerinfo {
-    position: absolute;
-    width: 200px;
-    height: 500px;
-    margin: 20px;
+    position: relative;
+    width: 250px;
+    height: 570px;
+    left: 974px;
+    padding: 20px;
+    border: 18px orangered solid;
+    top: 20px;
+    background-color: lightgreen;
 }
 
 .accountinfo {
     position: relative;
-    width: 400px;
-    height: 500px;
-    left: 400px;
+    width: 450px;
+    height: 466px;
+    left: 100px;
+    padding: 20px;
+    border: 18px orangered solid;
+    top: -623px;
+    background-color: lightgreen;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
+
 
 #searchbar {
     position: relative;
     margin: 20px;
     top: 55px;
     left: 41px;
+}
+
+.accountinfoandlinks {
+    width: 600px;
+    height: 100px;
+}
+
+.transactionlinks {
+    position: relative;
+    left: 300px;
+    top: -100px;
+}
+
+.customerwrap {
+    border: 5px solid orangered;
+    width: 710px;
+    height: 630px;
+    padding: 1px;
+    background-color: lightgreen;
+    position: relative;
+    left: 20%;
+    top: 30px;
+}
+
+#tablecustomersearch {
+    position: relative;
+    top: -60px;
+    left: -10px;
+}
+
+#totalbalance {
+    position: relative;
+    left: 70px;
+    bottom: 22px;
+}
+
+#totalbalancewrap {
+    background-color: lightgreen;
+    border: orangered 15px solid;
+    POSITION: relative;
+    top: -608px;
+    width: 456px;
+    left: 100px;
+    padding: 20px;
+    height: 30px;
 }

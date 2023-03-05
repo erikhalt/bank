@@ -9,7 +9,7 @@ from datetime import datetime
 # from wtforms import Form
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bankroute:Salahf98@inlbank22.mysql.database.azure.com/Bank'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://bankroute:Salahf98@inlbank22.mysql.database.azure.com/bank'
 db.app = app
 db.init_app(app)
 migrate = Migrate(app,db)
@@ -19,7 +19,9 @@ app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", 'pf9Wkove4IKEAXvy-cQkeDP
 app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
 app.config["REMEMBER_COOKIE_SAMESITE"] = "strict"
 app.config["SESSION_COOKIE_SAMESITE"] = "strict"
+app.config['SECURITY_RECOVERABLE'] = True
 app.security = Security(app, user_datastore)
+
 
 SECURITY_FRESHNESS_GRACE_PERIOD = 1
 
@@ -87,6 +89,13 @@ def startpage():
     if search.isnumeric():
         return redirect(url_for('customer', id=search))
     return render_template('home.html', customer=customer, idsearchform = idsearchform, customerAmount=customerAmount, accountAmount=accountAmount)
+
+@app.route("/forgot", methods=['GET','POST'])
+def forgotpassword():
+    form = forgotpasswordform()
+    if form.validate_on_submit():
+        pass
+    return render_template('forgot.html',form = form)
 
 @app.route("/logout")
 def logout():
@@ -169,8 +178,8 @@ def customer(id):
 
 
 @app.route("/<id>/Deposit<accountid>", methods=['GET','POST'])
-# @auth_required()
-# @roles_accepted("Admin","Staff")
+@auth_required()
+@roles_accepted("Admin","Staff")
 def deposit(id,accountid):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(Id=accountid).first()
@@ -208,8 +217,8 @@ def transaction(id,accountid):
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
-# @auth_required()
-# @roles_accepted("Admin","Staff")
+@auth_required()
+@roles_accepted("Admin","Staff")
 def withdrawl(id,accountid):
 
     search = request.args.get('id_search', '')
@@ -234,13 +243,13 @@ def withdrawl(id,accountid):
             elif accounts.Balance < withdrawlform.amount.data:
                 errormessage = 'Belopp för stort'
                 withdrawlform.amount.errors += errormessage
-        return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
+    return render_template('customerwithdrawl.html', customer=customer, account=accounts, form=withdrawlform)
 
 
 
 @app.route("/<id>/Transfer", methods=['GET','POST'])
-# @auth_required()
-# @roles_accepted("Admin","Staff")
+@auth_required()
+@roles_accepted("Admin","Staff")
 def transfer(id):
     customer = Customer.query.filter_by(Id=id).first()
     accounts = Account.query.filter_by(CustomerId=id)
@@ -289,26 +298,6 @@ def transfer(id):
 
     return render_template('customertransfere.html', customer=customer, accounts=accounts, form = transfere_form)
 
-
-
-
-
-
-# @app.route("/newcustomer", methods=['GET','POST'])
-# def newcustomer():
-#         form = newcustomerForm()
-
-#         if form.validate_on_submit():
-        
-#             #spara i databas
-#             customer = Customer()
-#             customer.GivenName = form.city.data
-#             customer.City = form.city.data
-#             customer.CountryCode = form.countryCode.data
-#             db.session.add(customer)
-#             db.session.commit()
-#             return redirect("/Customers" )
-#         return render_template('newcustomer.html', form=form)
 
 if __name__  == "__main__":
     with app.app_context():

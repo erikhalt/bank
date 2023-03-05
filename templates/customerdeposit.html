@@ -8,7 +8,7 @@ Customer
 <div class="customerwithdepbox">
     <h1>Deposit</h1>
     {% for field, errors in form.errors.items() %}
-    {{ form[field].label }}: {{ ', '.join(errors) }}
+    {{ form[field].label }}: {{ ''.join(errors) }}
     </br>
     {% endfor %}
     <form method="post">

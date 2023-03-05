@@ -6,76 +6,78 @@ Customers
 
 
 {% block content %}
-<form method="get">
-    <input type="text" placeholder="search" value="{{ search }}" name="search" id="searchbar">
-    <input class="btn" type=submit value="Sök" id="searchbar">
-</form>
+<div class="customerwrap">
+    <form method="get" id="tablecustomersearch">
+        <input type="text" placeholder="search" value="{{ search }}" name="search" id="searchbar">
+        <input class="btn" type=submit value="Sök" id="searchbar">
+    </form>
 
-<table class="tableofallcustomers">
-    <tr>
-        <th>ID
-        </th>
-        <th>Name
-            <a href="/Customers?sortColumn=Name&sortOrder=asc&search={{ search }}">
-                <i class='bx bx-up-arrow-alt'></i>
-            </a>
-            <a href="/Customers?sortColumn=Name&sortOrder=desc&search={{ search }}">
-                <i class='bx bx-down-arrow-alt'></i>
-            </a>
-        </th>
-        <th>Surname
-            <a href="/Customers?sortColumn=Surname&sortOrder=asc&search={{ search }}">
-                <i class='bx bx-up-arrow-alt'></i>
-            </a>
-            <a href="/Customers?sortColumn=Surname&sortOrder=desc&search={{ search }}">
-                <i class='bx bx-down-arrow-alt'></i>
-            </a>
-        </th>
-        <th>Address
-            <a href="/Customers?sortColumn=Address&sortOrder=asc&search={{ search }}">
-                <i class='bx bx-up-arrow-alt'></i>
-            </a>
-            <a href="/Customers?sortColumn=Address&sortOrder=desc&search={{ search }}">
-                <i class='bx bx-down-arrow-alt'></i>
-            </a>
-        </th>
-        <th>City
-            <a href="/Customers?sortColumn=City&sortOrder=asc&search={{ search }}">
-                <i class='bx bx-up-arrow-alt'></i>
-            </a>
-            <a href="/Customers?sortColumn=City&sortOrder=desc&search={{ search }}">
-                <i class='bx bx-down-arrow-alt'></i>
-            </a>
-        </th>
-    </tr>
-    {% for customer in customers %}
-    <tr>
-        <td>{{ customer.Id }}</td>
-        <td>{{ customer.GivenName }}</td>
-        <td>{{ customer.Surname }}</td>
-        <td>{{ customer.Streetaddress }}</td>
-        <td>{{ customer.City }}</td>
-        <td><a href={{url_for('customer', id=customer.Id)}}><i class='bx bx-edit'></i></a></td>
-    </tr>
-    {% endfor %}
-    <tfoot>
-        <td>
-            {% if has_prev %}
-            <a href="/Customers?page={{ page - 1 }}"><i class='bx bxs-left-arrow-circle'></i></a>
+    <table class="tableofallcustomers">
+        <tr>
+            <th>ID
+            </th>
+            <th>Name
+                <a href="/Customers?sortColumn=Name&sortOrder=asc&search={{ search }}">
+                    <i class='bx bx-up-arrow-alt'></i>
+                </a>
+                <a href="/Customers?sortColumn=Name&sortOrder=desc&search={{ search }}">
+                    <i class='bx bx-down-arrow-alt'></i>
+                </a>
+            </th>
+            <th>Surname
+                <a href="/Customers?sortColumn=Surname&sortOrder=asc&search={{ search }}">
+                    <i class='bx bx-up-arrow-alt'></i>
+                </a>
+                <a href="/Customers?sortColumn=Surname&sortOrder=desc&search={{ search }}">
+                    <i class='bx bx-down-arrow-alt'></i>
+                </a>
+            </th>
+            <th>Address
+                <a href="/Customers?sortColumn=Address&sortOrder=asc&search={{ search }}">
+                    <i class='bx bx-up-arrow-alt'></i>
+                </a>
+                <a href="/Customers?sortColumn=Address&sortOrder=desc&search={{ search }}">
+                    <i class='bx bx-down-arrow-alt'></i>
+                </a>
+            </th>
+            <th>City
+                <a href="/Customers?sortColumn=City&sortOrder=asc&search={{ search }}">
+                    <i class='bx bx-up-arrow-alt'></i>
+                </a>
+                <a href="/Customers?sortColumn=City&sortOrder=desc&search={{ search }}">
+                    <i class='bx bx-down-arrow-alt'></i>
+                </a>
+            </th>
+        </tr>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.Id }}</td>
+            <td>{{ customer.GivenName }}</td>
+            <td>{{ customer.Surname }}</td>
+            <td>{{ customer.Streetaddress }}</td>
+            <td>{{ customer.City }}</td>
+            <td><a href={{url_for('customer', id=customer.Id)}}><i class='bx bx-edit'></i></a></td>
+        </tr>
+        {% endfor %}
+        <tfoot>
+            <td>
+                {% if has_prev %}
+                <a href="/Customers?page={{ page - 1 }}"><i class='bx bxs-left-arrow-circle'></i></a>
 
-            {% endif %}
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-            {% if has_next %}
-            <a href="/Customers?page={{ page + 1 }}"><i class='bx bxs-right-arrow-circle'></i></a>
+                {% endif %}
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                {% if has_next %}
+                <a href="/Customers?page={{ page + 1 }}"><i class='bx bxs-right-arrow-circle'></i></a>
 
-            {% endif %}
-        </td>
-    </tfoot>
-</table>
+                {% endif %}
+            </td>
+        </tfoot>
+    </table>
+</div>
 
 {% endblock %}

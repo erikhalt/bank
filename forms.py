@@ -30,3 +30,7 @@ class transfere(FlaskForm):
 
 class id_search(FlaskForm):
     id_search = StringField('id_search', validators=[validators.DataRequired()])
+
+class forgotpasswordform(FlaskForm):
+    email = EmailField('email',validators=[emailVaild,validators.DataRequired(),validators.Email()])
+    newpassword = PasswordField('newpassword',validators=[validators.DataRequired(),validators.Length(min=4,max=20)])
