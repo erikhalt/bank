@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import Form, BooleanField, StringField, PasswordField, validators, ValidationError
-from wtforms.fields import IntegerField, TelField, EmailField,RadioField, SelectField, SelectMultipleField
+from wtforms.fields import IntegerField, TelField, EmailField,RadioField, SelectField, SelectMultipleField,DecimalField,FloatField
 
 def emailVaild(form, field):
     if not field.data.endswith('.se'):
@@ -21,7 +21,7 @@ class newcustomerForm(FlaskForm):
     countryCode = SelectField('countryCode', choices=[('SE','+46'),('NO','+41'),('FI','+42')])
 
 class widthdrawldeposit(FlaskForm):
-    amount = IntegerField('amount', validators=[validators.DataRequired()])
+    amount = FloatField('amount', validators=[validators.DataRequired()])
 
 
 def choicestransfere(list):
@@ -30,7 +30,7 @@ def choicestransfere(list):
 class transfere(FlaskForm):
     fromaccount = SelectField('fromaccount',validators=[validators.DataRequired()])
     recievingaccount = SelectField('recievingaccount',validators=[validators.DataRequired()])
-    fromamount = IntegerField('fromamount', validators=[validators.DataRequired()])
+    fromamount = FloatField('fromamount', validators=[validators.DataRequired()])
 
 class id_search(FlaskForm):
     id_search = IntegerField('id_search', validators=[validators.DataRequired(),onlyNumber])

@@ -195,9 +195,9 @@ def deposit(id,accountid):
         if depositform.amount.data < 0:
             depositform.amount.errors += "du kan ej sätta in ett negativt belopp"
         else:
-            accounts.Balance += depositform.amount.data
+            accounts.Balance += float(depositform.amount.data)
             db.session.commit()
-            create_transaction_deposit(depositform.amount.data,int(accountid))
+            create_transaction_deposit(depositform.amount.data,float(accountid))
 
             return redirect(url_for('customer',id=id))
     return render_template('customerdeposit.html', customer=customer, account=accounts, form=depositform)
@@ -237,9 +237,10 @@ def withdrawl(id,accountid):
             withdrawlform.amount.errors += 'du kan ej ta ut ett negativt belopp'
         else:    
             if  accounts.Balance >= withdrawlform.amount.data:
-                accounts.Balance -= withdrawlform.amount.data
+                accounts.Balance -= float(withdrawlform.amount.data)
                 db.session.commit()
-                create_transaction_withdrawl(withdrawlform.amount.data,int(accountid))
+                print(accounts.Balance)
+                create_transaction_withdrawl(float(withdrawlform.amount.data),float(accountid))
                 return redirect(url_for('customer', id=id))
             elif accounts.Balance < withdrawlform.amount.data:
                 errormessage = 'Belopp för stort'
@@ -293,8 +294,8 @@ def transfer(id):
 
         else:
             if from_account.Balance >= transfere_form.fromamount.data:
-                from_account.Balance -= transfere_form.fromamount.data
-                to_account.Balance += transfere_form.fromamount.data
+                from_account.Balance -= float(transfere_form.fromamount.data)
+                to_account.Balance += float(transfere_form.fromamount.data)
                 create_transaction_Transfer(transfere_form.fromamount.data,to_account_id,from_account_id)
 
                 return redirect(url_for('customer',id=id))
