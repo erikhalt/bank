@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash,jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 import os
@@ -6,6 +6,7 @@ from model import db, seedData, Customer, Account, Transaction,user_datastore
 from forms import *
 from flask_security import roles_accepted, auth_required, logout_user, Security,SQLAlchemyUserDatastore
 from datetime import datetime
+
 # from wtforms import Form
 
 app = Flask(__name__)
@@ -304,6 +305,36 @@ def transfer(id):
                 transfere_form.fromamount.errors += errormessage
 
     return render_template('customertransfere.html', customer=customer, accounts=accounts, form = transfere_form)
+
+
+
+@app.route('/api/<id>')
+def customerAPI(id):
+    customer = Customer.query.filter_by(Id=id).first()
+    accounts = Account.query.filter_by(CustomerId = id).first()
+    customerData = []
+    customerAccountinfo = []
+    for element in accounts:
+        customerAccountinfo.append({"Type":element.AccountType,
+                                    "Balance":element.Balance})
+    
+    customerinfo = {"Id":customer.Id,
+                    "Name":customer.Name,
+                    "Surname":customer.Surname,
+                    "Address":customer.Streetaddress,
+                    "City":customer.City,
+                    "Zipcode":customer.Zipcode,
+                    "Country":customer.Country,
+                    "CountryCode":customer.CountryCode,
+                    "Birthday":customer.Birthday,
+                    "NationalId":customer.NationalId,
+                    "TelephoneCountryCode":customer.TelephoneCountryCode,
+                    "Telephone":customer.Telephone,
+                    "Email":customer.EmailAddress,
+                    }
+    customerData.append(customerAccountinfo)
+    customerData.append(customerinfo)
+    return jsonify(customerData)
 
 
 if __name__  == "__main__":
