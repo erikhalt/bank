@@ -311,7 +311,7 @@ def transfer(id):
 @app.route('/api/<id>')
 def customerAPI(id):
     customer = Customer.query.filter_by(Id=id).first()
-    accounts = Account.query.filter_by(CustomerId = id).first()
+    accounts = Account.query.filter_by(CustomerId=id)
     customerData = []
     customerAccountinfo = []
     for element in accounts:
@@ -319,7 +319,7 @@ def customerAPI(id):
                                     "Balance":element.Balance})
     
     customerinfo = {"Id":customer.Id,
-                    "Name":customer.Name,
+                    "Name":customer.GivenName,
                     "Surname":customer.Surname,
                     "Address":customer.Streetaddress,
                     "City":customer.City,
