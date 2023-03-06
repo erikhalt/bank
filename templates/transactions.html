@@ -23,6 +23,7 @@ Transaction
 </div>
 
 <div class="accountinfo">
+        <h1>Account | {{account.Id}} : {{account.Balance}}:-</h1>
         {%for element in accountTransaction%}
         <ul>{{element.Id}}:{{element.Type}} {{element.Amount}}:- {{element.Operation}} | {{element.Date}}</ul>
         <ul></ul>

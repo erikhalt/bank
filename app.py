@@ -91,12 +91,6 @@ def startpage():
         return redirect(url_for('customer', id=search))
     return render_template('home.html', customer=customer, idsearchform = idsearchform, customerAmount=customerAmount, accountAmount=accountAmount)
 
-@app.route("/forgot", methods=['GET','POST'])
-def forgotpassword():
-    form = forgotpasswordform()
-    if form.validate_on_submit():
-        pass
-    return render_template('forgot.html',form = form)
 
 @app.route("/logout")
 def logout():
@@ -209,13 +203,14 @@ def deposit(id,accountid):
 def transaction(id,accountid):
     accountTransaction = Transaction.query.filter_by(AccountId=accountid).order_by(Transaction.Date.desc())
     customer = Customer.query.filter_by(Id=id).first()
+    account = Account.query.filter_by(Id=accountid).first()
 
     search = request.args.get('id_search', '')
     if search.isnumeric():
         return redirect(url_for('customer', id=search))
 
     
-    return render_template('transactions.html', accountTransaction=accountTransaction, customer=customer)
+    return render_template('transactions.html', accountTransaction=accountTransaction, customer=customer, account=account)
 
 
 @app.route("/<id>/Withdrawl<accountid>", methods=['GET','POST'])
